@@ -1,14 +1,11 @@
 const express = require('express');
 const app = express();
 
-const routes = require('../routes/route');
+const routes = require('./src/routes/route');
 
 app.use('/', routes); 
-// app.get('/', function (req, res) {
-//   res.send('Hello World!');
-// });
 
 app.listen(4000, function () {
-  console.log('Example app listening on port 4000!');
+  console.log('NetobjecX app listening on port 4000!');
 });
 
