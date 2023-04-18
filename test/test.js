@@ -2,7 +2,7 @@ const User = require('../src/model/user');
 const mongoose = require('mongoose');
 
 // Connect to database
-mongoose.connect('mongodb://localhost/myapp', { useNewUrlParser: true })
+mongoose.connect('mongodb://localhost/netobjexdb', { useNewUrlParser: true })
   .then(() => {
     console.log('Connected to database');
     

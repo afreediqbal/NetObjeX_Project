@@ -1,9 +1,17 @@
+const jwt = require('jsonwebtoken');
+
+
 function checkUser(req, res, next) {
+    const token = req.headers["x-access-token"];
+    const decoded = jwt.decode(token);
+    req.user = decoded;
+    console.log(decoded);
+
   if (req.user && req.user.role === 'user') {
-    // Add user-specific information to req object here
-    req.plan = getPlanForUser(req.user);
     return next();
   } else {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 }
+
+module.exports = {checkUser};
