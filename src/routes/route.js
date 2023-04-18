@@ -15,6 +15,6 @@ router.delete('/admin/delete-plan/:id', adminController.deletePlan);
 router.get('/user/plans', userController.listPlans);
 router.post('/user/subscribe-plan/:id', userController.subscribePlan);
 router.get('/user/features', userController.getFeatures);
-router.get('/user/usage', userController.getUsageStatistics);
+// router.get('/user/usage', userController.getUsageStatistics);
 
 module.exports = router;

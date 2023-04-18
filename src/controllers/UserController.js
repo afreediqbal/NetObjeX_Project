@@ -27,19 +27,19 @@ const subscribePlan = async (req, res) => {
   }
 };
 
-const getUsageStatistics = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    const usageStats = await User.getUsageStatistics(userId);
-    res.status(200).json(usageStats);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+// const getUsageStatistics = async (req, res) => {
+//   try {
+//     const { userId } = req.params;
+//     const user = await User.findById(userId);
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+//     const usageStats = await User.getUsageStatistics(userId);
+//     res.status(200).json(usageStats);
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
 
 const getFeatures = async (req, res) => {
     try {
@@ -50,4 +50,4 @@ const getFeatures = async (req, res) => {
     }
   };
 
-module.exports = {listPlans,subscribePlan,getUsageStatistics,getFeatures};
+module.exports = {listPlans,subscribePlan,getFeatures};
