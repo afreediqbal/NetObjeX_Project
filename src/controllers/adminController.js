@@ -1,6 +1,6 @@
 const Plan = require('../model/plan');
 
-const Feature = require('../models/feature');
+const Feature = require('../model/feature');
 
 const createPlan = async (req, res) => {
   try {

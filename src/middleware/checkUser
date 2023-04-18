@@ -1,0 +1,9 @@
+function checkUser(req, res, next) {
+  if (req.user && req.user.role === 'user') {
+    // Add user-specific information to req object here
+    req.plan = getPlanForUser(req.user);
+    return next();
+  } else {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+}
