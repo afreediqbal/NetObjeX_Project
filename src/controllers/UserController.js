@@ -79,7 +79,9 @@ const listPlans = async (req, res) => {
 
 const subscribePlan = async (req, res) => {
   try {
-    const { userId, planId } = req.params;
+    const userId = req.user.userId;
+    console.log(req.query);
+    const {planId} = req.query;
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });

@@ -8,11 +8,7 @@ const featureSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true
-  },
-  plans: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Plan'
-  }]
+  }
 });
 
 const Feature = mongoose.model('Feature', featureSchema);

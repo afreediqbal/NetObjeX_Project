@@ -66,8 +66,12 @@ const createFeature = async (req, res) => {
     const { name, description } = req.body;
     const feature = new Feature({ name, description });
     const savedFeature = await feature.save();
-    res.status(201).json(savedFeature);
+    res.status(201).json({
+      message: 'Feature added successfully',
+      feature: savedFeature
+    });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -105,10 +109,11 @@ const updateFeatureById = async (req, res) => {
       { new: true }
     );
     if (!updatedFeature) {
-      return res.status(404).json({ message: 'Feature not found' });
+      return res.status(400).json({ message: 'Feature not found' });
     }
     res.status(200).json(updatedFeature);
   } catch (err) {
+    console.log(err)
     res.status(500).json({ message: err.message });
   }
 };

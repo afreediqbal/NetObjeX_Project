@@ -13,6 +13,11 @@ router.get('/admin/plans',  adminController.getPlans);
 router.get('/admin/plan/:id',  adminController.getPlan);
 router.put('/admin/update-plan/:id',  adminController.updatePlan);
 router.delete('/admin/delete-plan/:id',  adminController.deletePlan);
+router.post('/admin/create-feature', adminController.createFeature);
+router.get('/admin/features', adminController.getAllFeatures);
+router.get('/admin/feature/:id', adminController.getFeatureById);
+router.put('/admin/feature/:id', adminController.updateFeatureById);
+router.delete('/admin/feature/:id', adminController.deleteFeatureById);
 
 // USER ROUTES
 router.get('/user/plans', checkUser, userController.listPlans);
