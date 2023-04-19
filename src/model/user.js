@@ -19,7 +19,13 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Plan'
   }
+
+  
 });
+
+userSchema.statics.findPlanById = async function(planId) {
+  return this.model('Plan').findById(planId);
+};
 
 const User = mongoose.model('User', userSchema);
 

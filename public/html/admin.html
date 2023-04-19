@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/admin.css">
+  </head>
+  <body>
+    <h1>Welcome to the Admin Dashboard</h1>
+    <h2>Plans</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Display plans here using data from the backend -->
+        <tr>
+          <td>Basic</td>
+          <td>A basic plan</td>
+          <td>$9.99/month</td>
+          <td>
+            <a href="/admin/plan/1">Edit</a>
+            <form action="/admin/delete-plan/1" method="POST">
+              <input type="hidden" name="_method" value="DELETE">
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h2>Features</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Display features here using data from the backend -->
+        <tr>
+          <td>Feature 1</td>
+          <td>A great feature</td>
+          <td>
+            <a href="/admin/feature/1">Edit</a>
+            <form action="/admin/feature/1" method="POST">
+              <input type="hidden" name="_method" value="DELETE">
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <a href="/admin/create-plan">Create Plan</a>
+    <a href="/admin/create-feature">Create Feature</a>
+  </body>
+</html>

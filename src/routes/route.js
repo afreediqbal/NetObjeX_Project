@@ -22,8 +22,9 @@ router.delete('/admin/feature/:id', adminController.deleteFeatureById);
 // USER ROUTES
 router.post('/register', userController.registerUser);
 router.post('/signin', userController.signinUser);
+router.get('/user/sub-plans', checkUser, userController.listSubscribedPlans);
 router.get('/user/plans', checkUser, userController.listPlans);
-router.post('/user/subscribe-plan/:id',  userController.subscribePlan);
-router.get('/user/features',  userController.getFeatures);
+router.post('/user/subscribe-plan', checkUser,  userController.subscribePlan);
+router.put('/user/unsubscribe-plan', checkUser, userController.unsubscribePlan);
 
 module.exports = router;

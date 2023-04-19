@@ -1,8 +1,10 @@
 const User = require('../model/user');
+const Plan = require('../model/plan')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const mongoose = require('mongoose');
+require('dotenv').config()
 
 
 //User Signup
@@ -54,10 +56,11 @@ const registerUser = async (req, res) => {
     // Save new user to database
     await newUser.save();
 
+    const secret = process.env.JWT_TOKEN;
     // Generate JWT token
     const token = jwt.sign(
       { email: newUser.email, userId: newUser._id, role:"user" },
-      "a324hh2ber",
+        secret,
       { expiresIn: '1h' }
     );
 
@@ -73,6 +76,16 @@ const signinUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+
+    const validateSchema = Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().min(6).required()
+    });
+
+    // Input Validation
+    const { error } = validateSchema.validate(req.body);
+    if (error) throw new Error(error.message);
+
     // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
@@ -85,10 +98,12 @@ const signinUser = async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
+    const secret = process.env.JWT_TOKEN;
+    console.log(secret);
     // Generate JWT token
     const token = jwt.sign(
       { email: user.email, userId: user._id, role: user.role },
-      "a324hh2ber",
+        secret,
       { expiresIn: '1h' }
     );
 
@@ -99,11 +114,16 @@ const signinUser = async (req, res) => {
   }
 };
 
-//Get the list of available plans
-const listPlans = async (req, res) => {
+//Get the list of plans user has subscribed 
+const listSubscribedPlans = async (req, res) => {
   try {
-    const plans = await User.findById(req.user.userId).populate('plan');
-    res.status(200).json(plans);
+    const user = await User.findById(req.user.userId).populate('plan');
+    delete user.password;
+    if (user.plan){
+      res.status(200).json(user.plan)
+    }else{
+      res.status(200).json({ message: "No active plans"})
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -130,14 +150,37 @@ const subscribePlan = async (req, res) => {
   }
 };
 
-//Get Features
-const getFeatures = async (req, res) => {
-    try {
-      const features = await Feature.find();
-      res.status(200).json(features);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+//Unsubscribe from a Plan
+const unsubscribePlan = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  };
+    if (!user.plan) {
+      return res.status(400).json({ message: "User is not subscribed to any plan" });
+    }
+    user.plan = null;
+    await user.save();
+    res.status(200).json({ message: "User unsubscribed successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-module.exports = {listPlans,subscribePlan,getFeatures,registerUser,signinUser};
+
+// List of all available plans for the user
+const listPlans = async (req, res) => {
+  try {
+    const plans = await Plan.find();
+    res.status(200).json(plans);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+
+module.exports = {listSubscribedPlans,subscribePlan,registerUser,signinUser,listPlans,unsubscribePlan};

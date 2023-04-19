@@ -64,6 +64,13 @@ const getPlans = async (req, res) => {
 
 const updatePlan = async (req, res) => {
   try {
+
+    const validateSchema = Joi.object({
+      name: Joi.string().required(),
+      price: Joi.number().required(), 
+      feature: Joi.array().items(objectId.required())
+    });
+    
     const plan = await Plan.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
