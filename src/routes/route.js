@@ -20,9 +20,10 @@ router.put('/admin/feature/:id', adminController.updateFeatureById);
 router.delete('/admin/feature/:id', adminController.deleteFeatureById);
 
 // USER ROUTES
+router.post('/register', userController.registerUser);
+router.post('/signin', userController.signinUser);
 router.get('/user/plans', checkUser, userController.listPlans);
 router.post('/user/subscribe-plan/:id',  userController.subscribePlan);
 router.get('/user/features',  userController.getFeatures);
-// router.get('/user/usage', userController.getUsageStatistics);
 
 module.exports = router;

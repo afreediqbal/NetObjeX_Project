@@ -5,7 +5,7 @@ const Joi = require('joi');
 const mongoose = require('mongoose');
 
 
-
+//User Signup
 const registerUser = async (req, res) => {
 
   const objectId = Joi.extend((joi) => ({
@@ -68,6 +68,38 @@ const registerUser = async (req, res) => {
   }
 };
 
+//User Signin
+const signinUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // Check if password is correct
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { email: user.email, userId: user._id, role: user.role },
+      "a324hh2ber",
+      { expiresIn: '1h' }
+    );
+
+    res.status(200).json({ message: 'Sign in successful', token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+//Get the list of available plans
 const listPlans = async (req, res) => {
   try {
     const plans = await User.findById(req.user.userId).populate('plan');
@@ -77,6 +109,7 @@ const listPlans = async (req, res) => {
   }
 };
 
+//Subscribe to a Plan
 const subscribePlan = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -90,27 +123,14 @@ const subscribePlan = async (req, res) => {
     if (!plan) {
       return res.status(404).json({ message: "Plan not found" });
     }
-    const subscription = await User.subscribePlan(userId, planId);
+    const subscription = await User.findByIdAndUpdate(userId, {plan:planId});
     res.status(200).json(subscription);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-// const getUsageStatistics = async (req, res) => {
-//   try {
-//     const { userId } = req.params;
-//     const user = await User.findById(userId);
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-//     const usageStats = await User.getUsageStatistics(userId);
-//     res.status(200).json(usageStats);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// };
-
+//Get Features
 const getFeatures = async (req, res) => {
     try {
       const features = await Feature.find();
@@ -120,4 +140,4 @@ const getFeatures = async (req, res) => {
     }
   };
 
-module.exports = {listPlans,subscribePlan,getFeatures,registerUser};
+module.exports = {listPlans,subscribePlan,getFeatures,registerUser,signinUser};

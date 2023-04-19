@@ -4,6 +4,34 @@ const Feature = require('../model/feature');
 
 const createPlan = async (req, res) => {
   try {
+
+    const objectId = Joi.extend((joi) => ({
+      type: 'objectId',
+      messages: {
+        invalid: '{{#label}} must be a valid Object ID',
+      },
+      validate(value, helpers) {
+        if (!mongoose.Types.ObjectId.isValid(value)) {
+          return { value, errors: helpers.error('invalid') };
+        }
+      },
+    }));
+
+    const validateSchema = Joi.object({
+      name: Joi.string().required(),
+      price: Joi.number().required(), 
+      feature: Joi.array().items(objectId.required())
+    });
+
+    const { error } = validateSchema.validate(req.body);
+    if (error) throw new Error(error.message);
+
+    // Check if plan already exists
+    const existingPlan = await Plan.findOne({name:req.body});
+    if (existingPlan) {
+      return res.status(409).json({ message: 'Name already in use' });
+    }
+
     const plan = new Plan(req.body);
     await plan.save();
     res.status(201).json({ message: 'Plan created successfully', data: plan });
@@ -14,6 +42,7 @@ const createPlan = async (req, res) => {
 
 const getPlan = async (req, res) => {
   try {
+    
     const plan = await Plan.findById(req.params.id);
     if (!plan) {
       return res.status(404).json({ message: 'Plan not found' });
