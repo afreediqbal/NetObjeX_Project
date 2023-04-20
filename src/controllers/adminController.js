@@ -35,7 +35,6 @@ const addAdmin = async (req, res) => {
 
     res.status(201).json({ message: 'Admin created', user: newUser });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -146,7 +145,6 @@ const createFeature = async (req, res) => {
       feature: savedFeature
     });
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -188,7 +186,6 @@ const updateFeatureById = async (req, res) => {
     }
     res.status(200).json(updatedFeature);
   } catch (err) {
-    console.log(err)
     res.status(500).json({ message: err.message });
   }
 };

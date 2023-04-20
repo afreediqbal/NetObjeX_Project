@@ -6,8 +6,6 @@ const {checkAdmin} = require('../middleware/checkAdmin')
 const adminController = require('../controllers/adminController');
 const userController = require('../controllers/userController');
 
-router.post('/register', userController.registerUser);
-
 // ADMIN ROUTES
 router.post('/admin/add', checkAdmin, adminController.addAdmin);
 router.post('/admin/create-plan', checkAdmin,  adminController.createPlan);
@@ -22,6 +20,9 @@ router.put('/admin/feature/:id', checkAdmin, adminController.updateFeatureById);
 router.delete('/admin/feature/:id', checkAdmin, adminController.deleteFeatureById);
 
 // USER ROUTES
+router.get('/signin', (req, res) => {
+    res.render('signin'); // render the signin.handlebars file
+  });
 router.post('/register', userController.registerUser);
 router.post('/signin', userController.signinUser);
 router.get('/user/sub-plans', checkUser, userController.listSubscribedPlans);

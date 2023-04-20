@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to User Dashboard</h1>
+    <p>Here are your subscribed plans:</p>
+    {{#each plans}}
+        <div>
+            <h3>{{this.name}}</h3>
+            <p>{{this.description}}</p>
+            <p>Price: {{this.price}}</p>
+        </div>
+    {{/each}}
+
+    <br>
+
+    <form method="POST" action="/user/subscribe-plan">
+        <label for="plan">Choose a plan:</label>
+        <select id="plan" name="plan">
+            {{#each availablePlans}}
+                <option value="{{this._id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
+        <button type="submit">Subscribe</button>
+    </form>
+
+    <br>
+
+    <form method="POST" action="/user/unsubscribe-plan">
+        <label for="plan">Choose a plan to unsubscribe:</label>
+        <select id="plan" name="plan">
+            {{#each plans}}
+                <option value="{{this._id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
+        <button type="submit">Unsubscribe</button>
+    </form>
+</body>
+</html>

@@ -2,6 +2,12 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const path = require('path');
+
+const templatePath = path.join(__dirname, 'views');
+app.set('view engine', 'hbs');
+app.set('views', templatePath);
+
 
 mongoose.connect('mongodb://localhost/netobjexdb', { useNewUrlParser: true, useUnifiedTopology: true });
 

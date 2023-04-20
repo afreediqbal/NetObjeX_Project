@@ -8,7 +8,7 @@ This project aims to develop a web application with two types of roles - admin a
 
 - Backend: Node.js
 - Database: MongoDB
-- Frontend: HTML, CSS, JavaScript (optional: frontend framework/library like React, Angular, or Vue.js)
+- Frontend: HTML, CSS, JavaScript, Handlebars rendering
 - API: Express.js (Node.js framework)
 
 ## Requirements
@@ -61,9 +61,10 @@ This project aims to develop a web application with two types of roles - admin a
 ### User Endpoints
 
 - `POST /register` - User registration
-- `POST /user/signin` - User signin
+- `POST /signin` - User/Admin signin
 - `GET /user/plans` - List available plans for the user
-- `PUT /user/subscribe` - Subscribe to a plan
+- `PUT /user/subscribe-plan` - Subscribe to a plan
+- `PUT /user/unsubscribe-plan` - Unsubscribe from a plan
 
 ### Admin Endpoints
 
@@ -80,4 +81,4 @@ This project aims to develop a web application with two types of roles - admin a
 
 ## Contributors
 
-- [Afreed Iqbal](https://github.com/yourusername)
+- [Afreed Iqbal]

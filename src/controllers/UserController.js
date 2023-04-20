@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const mongoose = require('mongoose');
 require('dotenv').config()
+const exphbs = require('express-handlebars');
 
 
 //User Signup
@@ -59,7 +60,7 @@ const registerUser = async (req, res) => {
 
 //User Signin
 const signinUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
 
   try {
 
@@ -85,7 +86,6 @@ const signinUser = async (req, res) => {
     }
 
     const secret = process.env.JWT_TOKEN;
-    console.log(secret);
     // Generate JWT token
     const token = jwt.sign(
       { email: user.email, userId: user._id, role: user.role },
@@ -93,9 +93,19 @@ const signinUser = async (req, res) => {
       { expiresIn: '1h' }
     );
 
+    //Use either of these two return response-comment any one(this for postman response)
     res.status(200).json({ message: 'Sign in successful', token });
+
+    //(this is the demo for reactive web page using handlebars)
+    if(role=='admin'){
+      res.status(200).render("admin-dashboard");
+    }
+    else{
+      res.status(200).render("user-dashboard");
+    }
+    
+    
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -119,7 +129,6 @@ const listSubscribedPlans = async (req, res) => {
 const subscribePlan = async (req, res) => {
   try {
     const userId = req.user.userId;
-    console.log(req.query);
     const {planId} = req.query;
     const user = await User.findById(userId);
     if (!user) {
@@ -169,7 +178,6 @@ const listPlans = async (req, res) => {
     const plans = await Plan.find();
     res.status(200).json(plans);
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: err.message });
   }
 };
