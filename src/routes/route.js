@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {checkUser} = require('../middleware/checkUser')
+const {checkAdmin} = require('../middleware/checkAdmin')
 
 const adminController = require('../controllers/adminController');
 const userController = require('../controllers/userController');
@@ -8,16 +9,17 @@ const userController = require('../controllers/userController');
 router.post('/register', userController.registerUser);
 
 // ADMIN ROUTES
-router.post('/admin/create-plan',  adminController.createPlan);
-router.get('/admin/plans',  adminController.getPlans);
-router.get('/admin/plan/:id',  adminController.getPlan);
-router.put('/admin/update-plan/:id',  adminController.updatePlan);
-router.delete('/admin/delete-plan/:id',  adminController.deletePlan);
-router.post('/admin/create-feature', adminController.createFeature);
-router.get('/admin/features', adminController.getAllFeatures);
-router.get('/admin/feature/:id', adminController.getFeatureById);
-router.put('/admin/feature/:id', adminController.updateFeatureById);
-router.delete('/admin/feature/:id', adminController.deleteFeatureById);
+router.post('/admin/add', checkAdmin, adminController.addAdmin);
+router.post('/admin/create-plan', checkAdmin,  adminController.createPlan);
+router.get('/admin/plans', checkAdmin, adminController.getPlans);
+router.get('/admin/plan/:id', checkAdmin, adminController.getPlan);
+router.put('/admin/update-plan/:id', checkAdmin, adminController.updatePlan);
+router.delete('/admin/delete-plan/:id', checkAdmin, adminController.deletePlan);
+router.post('/admin/create-feature', checkAdmin, adminController.createFeature);
+router.get('/admin/features', checkAdmin, adminController.getAllFeatures);
+router.get('/admin/feature/:id', checkAdmin, adminController.getFeatureById);
+router.put('/admin/feature/:id', checkAdmin, adminController.updateFeatureById);
+router.delete('/admin/feature/:id', checkAdmin, adminController.deleteFeatureById);
 
 // USER ROUTES
 router.post('/register', userController.registerUser);

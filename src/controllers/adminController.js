@@ -1,6 +1,45 @@
 const Plan = require('../model/plan');
+const User = require('../model/user');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const Feature = require('../model/feature');
+
+const addAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if user is authorized
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Email already in use' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Create new user
+    const newUser = new User({
+      email,
+      password: hashedPassword,
+      role: 'admin'
+    });
+
+    // Save new user to database
+    await newUser.save();
+
+    res.status(201).json({ message: 'Admin created', user: newUser });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
 const createPlan = async (req, res) => {
   try {
@@ -70,7 +109,7 @@ const updatePlan = async (req, res) => {
       price: Joi.number().required(), 
       feature: Joi.array().items(objectId.required())
     });
-    
+
     const plan = await Plan.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -167,4 +206,4 @@ const deleteFeatureById = async (req, res) => {
   }
 };
 
-module.exports = {createPlan,getPlan,getPlans,updatePlan,deletePlan,createFeature,getAllFeatures,getFeatureById,updateFeatureById,deleteFeatureById};
+module.exports = {addAdmin,createPlan,getPlan,getPlans,updatePlan,deletePlan,createFeature,getAllFeatures,getFeatureById,updateFeatureById,deleteFeatureById};

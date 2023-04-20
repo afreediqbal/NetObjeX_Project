@@ -1,7 +1,17 @@
+const jwt = require('jsonwebtoken');
+
+
 function checkAdmin(req, res, next) {
-  if (req.user.role === 'admin') {
+    const token = req.headers["x-access-token"];
+    const decoded = jwt.decode(token);
+    req.user = decoded;
+    console.log(decoded);
+
+  if (req.user && req.user.role === 'admin') {
     return next();
   } else {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 }
+
+module.exports = {checkAdmin};

@@ -1,17 +1,23 @@
 const User = require('../src/model/user');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+
 
 // Connect to database
 mongoose.connect('mongodb://localhost/netobjexdb', { useNewUrlParser: true })
-  .then(() => {
+  .then(async() => {
     console.log('Connected to database');
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash('adminpass', 12);
     
     // Create a user
     const user = new User({
-      email: 'test@example.com',
-      password: 'password',
-      role: 'user'
+      email: 'admin@example.com',
+      password: hashedPassword,
+      role: 'admin'
     });
+
     
     // Save user to database
     return user.save();

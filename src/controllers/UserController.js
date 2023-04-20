@@ -10,26 +10,13 @@ require('dotenv').config()
 //User Signup
 const registerUser = async (req, res) => {
 
-  const objectId = Joi.extend((joi) => ({
-    type: 'objectId',
-    messages: {
-      invalid: '{{#label}} must be a valid Object ID',
-    },
-    validate(value, helpers) {
-      if (!mongoose.Types.ObjectId.isValid(value)) {
-        return { value, errors: helpers.error('invalid') };
-      }
-    },
-  }));
-
-  const { email, password, plan } = req.body;
+  const { email, password} = req.body;
 
   try {
 
     const registerSchema = Joi.object({
       email: Joi.string().email().required(),
-      password: Joi.string().min(6).required(), 
-      plan: objectId.required()
+      password: Joi.string().min(6).required(),
     });
 
     // Input Validation
@@ -49,8 +36,7 @@ const registerUser = async (req, res) => {
     const newUser = new User({
       email,
       password: hashedPassword,
-      role:'user',
-      plan
+      role:'user'
     });
 
     // Save new user to database
@@ -143,12 +129,19 @@ const subscribePlan = async (req, res) => {
     if (!plan) {
       return res.status(404).json({ message: "Plan not found" });
     }
+    
+    // Check if the plan is already subscribed by the user
+    if(user.plan && user.plan.name === plan.name){
+        return res.status(400).json({ message: "Plan already subscribed" });
+    }
+    
     const subscription = await User.findByIdAndUpdate(userId, {plan:planId});
     res.status(200).json(subscription);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 //Unsubscribe from a Plan
 const unsubscribePlan = async (req, res) => {
